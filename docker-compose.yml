@@ -1,0 +1,54 @@
+version: "3.8"
+
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+x-restart-policy:
+  restart: unless-stopped
+
+services:
+  watchtower:
+    <<: *logging
+
+    container_name: watchtower
+
+    image: "docker.io/containrrr/watchtower"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    env_file:
+      - .env
+
+    environment:
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_POLL_INTERVAL: 30
+
+  postgres:
+    <<: *logging
+
+    image: "docker.io/postgres:16-alpine"
+
+    ports:
+      - "5432:5432"
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 2s
+      timeout: 1s
+      retries: 5
+
+    volumes:
+      - ./services/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    networks:
+      - database-access
+
+networks:
+  database-access:
+    name: database-access
+    external: true
