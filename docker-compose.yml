@@ -14,12 +14,7 @@ services:
   watchtower:
     <<: *logging
 
-    container_name: watchtower
-
     image: "docker.io/containrrr/watchtower"
-
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
     env_file:
       - .env
@@ -28,16 +23,22 @@ services:
       WATCHTOWER_LABEL_ENABLE: "true"
       WATCHTOWER_POLL_INTERVAL: 30
 
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   postgres:
     <<: *logging
 
     image: "docker.io/postgres:16-alpine"
 
+    env_file:
+      - .env
+
     ports:
       - "5432:5432"
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
       interval: 2s
       timeout: 1s
       retries: 5
