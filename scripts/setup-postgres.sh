@@ -53,6 +53,8 @@ create_user_and_grant_privileges() {
     docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $username;"
     docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $username;"
     docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT CREATE ON SCHEMA public TO $username;"
+    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT CREATE ON DATABASE $database TO $username;"
+    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
 }
 
 

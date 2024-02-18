@@ -43,9 +43,6 @@ services:
       timeout: 1s
       retries: 5
 
-    volumes:
-      - ./services/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-
     networks:
       - database-access
 
