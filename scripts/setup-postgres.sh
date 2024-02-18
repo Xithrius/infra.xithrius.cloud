@@ -50,8 +50,11 @@ create_user_and_grant_privileges() {
 
     # Grant privileges to the user
     echo "Granting privileges to user: $username"
-    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -c "GRANT ALL PRIVILEGES ON DATABASE $database TO $username;"
+    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $username;"
+    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $username;"
+    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT CREATE ON SCHEMA public TO $username;"
 }
+
 
 if [ $# -ne 4 ]; then
     echo "Usage: $0 <database_name> <elevated_username> <username> <password>"
