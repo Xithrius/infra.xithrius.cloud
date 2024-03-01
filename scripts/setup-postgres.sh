@@ -10,6 +10,8 @@ check_network() {
 check_postgres_container() {
     if ! docker ps -f name="$POSTGRES_CONTAINER" --format '{{.Names}}' | grep -q "$POSTGRES_CONTAINER"; then
         echo "Starting postgres container: $POSTGRES_CONTAINER"
+
+        # TODO: Either `docker-compose` or `docker compose`
         docker-compose up -d postgres
     fi
 }
@@ -48,18 +50,25 @@ create_user_and_grant_privileges() {
         docker exec $POSTGRES_CONTAINER psql -U $elevated_username -c "CREATE USER $username WITH ENCRYPTED PASSWORD '$password';"
     fi
 
+    # Define the list of commands
+    commands=(
+        "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $username;"
+        "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $username;"
+        "GRANT CREATE ON SCHEMA public TO $username;"
+        "GRANT CREATE ON DATABASE $database TO $username;"
+        "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+    )
+
     # Grant privileges to the user
     echo "Granting privileges to user: $username"
-    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $username;"
-    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO $username;"
-    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT CREATE ON SCHEMA public TO $username;"
-    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "GRANT CREATE ON DATABASE $database TO $username;"
-    docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;"
+    for cmd in "${commands[@]}"; do
+        docker exec $POSTGRES_CONTAINER psql -U $elevated_username -d $database -c "$cmd"
+    done
 }
 
 
 if [ $# -ne 4 ]; then
-    echo "Usage: $0 <database_name> <elevated_username> <username> <password>"
+    echo "Usage: $0 <elevated_username> <database_name> <username> <password>"
     exit 1
 fi
 
