@@ -11,6 +11,14 @@ x-restart-policy:
   restart: unless-stopped
 
 services:
+  nginx:
+    <<: *logging
+
+    image: "docker.io/nginx:1.25.4"
+
+    volumes:
+      - ./services/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+
   watchtower:
     <<: *logging
 
@@ -46,7 +54,92 @@ services:
     networks:
       - database-access
 
+  grafana:
+    <<: *logging
+
+    image: "docker.io/grafana/grafana:10.3.4"
+
+    env_file: .env
+
+    environment:
+      GF_SERVER_ROOT_URL: "https://grafana.xithrius.cloud"
+
+    user: "0"
+
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./services/grafana/provisioning:/etc/grafana/provisioning
+      - ./services/grafana/dashboards:/var/lib/grafana/dashboards
+
+    ports:
+      - "127.0.0.1:3001:3000"
+
+    networks:
+      - infra-metrics
+
+  prometheus:
+    <<: *logging
+
+    image: "docker.io/prom/prometheus:v2.50.1"
+
+    command:
+      - --config.file=/etc/prometheus.yml
+
+    user: "0"
+
+    volumes:
+      - ./services/prometheus/prometheus.yml:/etc/prometheus.yml
+      - ./data/prometheus:/prometheus
+
+    ports:
+      - "127.0.0.1:9090:9090"
+
+    networks:
+      # TODO: Networking the APIs, not specifically database access
+      - database-access
+      - infra-metrics
+
+  node_exporter:
+    <<: *logging
+
+    image: "quay.io/prometheus/node-exporter:v1.7.0"
+
+    command:
+      - "--path.rootfs=/host --collector.systemd --collector.processes"
+
+    pid: host
+
+    volumes:
+      - "/:/host:ro,rslave"
+
+    ports:
+      - "127.0.0.1:9100:9100"
+
+    networks:
+      - infra-metrics
+
+  cadvisor:
+    <<: *logging
+
+    image: "gcr.io/cadvisor/cadvisor:v0.47.2"
+
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    networks:
+      - infra-metrics
+
 networks:
   database-access:
     name: database-access
+    external: true
+  infra-metrics:
+    name: infra-metrics
     external: true
