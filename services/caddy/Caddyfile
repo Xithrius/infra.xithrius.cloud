@@ -1,0 +1,3 @@
+grafana.xithrius.cloud {
+	reverse_proxy xithriuscloud_grafana_1:3001
+}

@@ -1,13 +1,8 @@
 #!/bin/bash
 
-check_network() {
-    if ! docker network inspect $DOCKER_NETWORK &>/dev/null; then
-        echo "Creating docker network: $DOCKER_NETWORK"
-        docker network create $DOCKER_NETWORK
-    fi
-}
+. common.sh
 
-check_postgres_container() {
+function check_postgres_container() {
     if ! docker ps -f name="$POSTGRES_CONTAINER" --format '{{.Names}}' | grep -q "$POSTGRES_CONTAINER"; then
         echo "Starting postgres container: $POSTGRES_CONTAINER"
 
@@ -22,7 +17,7 @@ check_postgres_container() {
     fi
 }
 
-check_database_existence() {
+function check_database_existence() {
     local database=$1
     local username=$2
 
@@ -44,7 +39,7 @@ check_database_existence() {
     fi
 }
 
-create_user_and_grant_privileges() {
+function create_user_and_grant_privileges() {
     local elevated_username=$1
     local database=$2
     local username=$3
@@ -86,7 +81,7 @@ PASSWORD=$4
 DOCKER_NETWORK="database-access"
 POSTGRES_CONTAINER="infraxithriuscloud-postgres-1"
 
-check_network
+check_and_create_docker_network $DOCKER_NETWORK
 check_postgres_container
 check_database_existence $DATABASE_NAME $ELEVATED_USERNAME
 create_user_and_grant_privileges $ELEVATED_USERNAME $DATABASE_NAME $USERNAME $PASSWORD
