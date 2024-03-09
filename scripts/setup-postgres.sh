@@ -11,8 +11,14 @@ check_postgres_container() {
     if ! docker ps -f name="$POSTGRES_CONTAINER" --format '{{.Names}}' | grep -q "$POSTGRES_CONTAINER"; then
         echo "Starting postgres container: $POSTGRES_CONTAINER"
 
-        # TODO: Either `docker-compose` or `docker compose`
-        docker-compose up -d postgres
+        if command -v "docker compose" &> /dev/null; then
+            docker compose up -d postgres
+        elif command -v docker-compose &> /dev/null; then
+            docker-compose up -d postgres
+        else
+            echo "Neither 'docker compose' or 'docker-compose' commands exist. Exiting."
+            exit 1
+        fi
     fi
 }
 
