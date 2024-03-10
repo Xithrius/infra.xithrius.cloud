@@ -149,6 +149,39 @@ services:
     networks:
       - infra-metrics
 
+  loki:
+    <<: *logging
+
+    image: "docker.io/grafana/loki:2.9.5"
+
+    command: "-config.file=/etc/loki/local-config.yaml"
+
+    ports:
+      - "3100:3100"
+
+    networks:
+      - infra-metrics
+      - api-metrics
+
+  tempo:
+    <<: *logging
+
+    image: "docker.io/grafana/tempo:2.4.0"
+
+    command:
+      - "--target=all"
+      - "--storage.trace.backend=local"
+      - "--storage.trace.local.path=/var/tempo"
+      - "--auth.enabled=false"
+
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+
+    networks:
+      - infra-metrics
+      - api-metrics
+
 networks:
   database-access:
     name: database-access
