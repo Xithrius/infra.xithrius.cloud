@@ -17,16 +17,16 @@ services:
     image: "docker.io/caddy:2.7.6"
 
     ports:
-      - "80:80"
-      - "443:443"
+    - "80:80"
+    - "443:443"
 
     volumes:
-      - ./services/caddy/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
+    - ./services/caddy/Caddyfile:/etc/caddy/Caddyfile
+    - caddy_data:/data
+    - caddy_config:/config
 
     networks:
-      - infra-metrics
+    - infra-metrics
 
   watchtower:
     <<: *logging
@@ -34,14 +34,14 @@ services:
     image: "docker.io/containrrr/watchtower"
 
     env_file:
-      - .env
+    - .env
 
     environment:
       WATCHTOWER_LABEL_ENABLE: "true"
       WATCHTOWER_POLL_INTERVAL: 30
 
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+    - /var/run/docker.sock:/var/run/docker.sock
 
   postgres:
     <<: *logging
@@ -49,10 +49,7 @@ services:
     image: "docker.io/postgres:16-alpine"
 
     env_file:
-      - .env
-
-    ports:
-      - "5432:5432"
+    - .env
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
@@ -61,7 +58,7 @@ services:
       retries: 5
 
     networks:
-      - database-access
+    - database-access
 
   grafana:
     <<: *logging
@@ -76,15 +73,12 @@ services:
     user: "0"
 
     volumes:
-      - ./data/grafana:/var/lib/grafana
-      - ./services/grafana/provisioning:/etc/grafana/provisioning
-      - ./services/grafana/dashboards:/var/lib/grafana/dashboards
-
-    ports:
-      - "3000:3000"
+    - ./data/grafana:/var/lib/grafana
+    - ./services/grafana/provisioning:/etc/grafana/provisioning
+    - ./services/grafana/dashboards:/var/lib/grafana/dashboards
 
     networks:
-      - infra-metrics
+    - infra-metrics
 
   prometheus:
     <<: *logging
@@ -92,20 +86,16 @@ services:
     image: "docker.io/prom/prometheus:v2.50.1"
 
     command:
-      - --config.file=/etc/prometheus.yml
+    - --config.file=/etc/prometheus.yml
 
     user: "0"
 
     volumes:
-      - ./services/prometheus/prometheus.yml:/etc/prometheus.yml
-      - ./data/prometheus:/prometheus
-
-    ports:
-      - "127.0.0.1:9090:9090"
+    - ./services/prometheus/prometheus.yml:/etc/prometheus.yml
+    - ./data/prometheus:/prometheus
 
     networks:
-      - infra-metrics
-      - api-metrics
+    - infra-metrics
 
   node_exporter:
     <<: *logging
@@ -113,23 +103,20 @@ services:
     image: "quay.io/prometheus/node-exporter:v1.7.0"
 
     command:
-      - "--path.procfs=/host/proc"
-      - "--path.rootfs=/host"
-      - "--path.sysfs=/host/sys"
-      - "--collector.systemd"
-      - "--collector.processes"
-      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+    - "--path.procfs=/host/proc"
+    - "--path.rootfs=/host"
+    - "--path.sysfs=/host/sys"
+    - "--collector.systemd"
+    - "--collector.processes"
+    - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
 
     pid: host
 
     volumes:
-      - /:/host:ro,rslave
-
-    ports:
-      - "127.0.0.1:9100:9100"
+    - /:/host:ro,rslave
 
     networks:
-      - infra-metrics
+    - infra-metrics
 
   cadvisor:
     <<: *logging
@@ -137,17 +124,14 @@ services:
     image: "gcr.io/cadvisor/cadvisor:v0.47.2"
 
     volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
-
-    ports:
-      - "127.0.0.1:8080:8080"
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /dev/disk/:/dev/disk:ro
 
     networks:
-      - infra-metrics
+    - infra-metrics
 
   loki:
     <<: *logging
@@ -156,12 +140,8 @@ services:
 
     command: "-config.file=/etc/loki/local-config.yaml"
 
-    ports:
-      - "3100:3100"
-
     networks:
-      - infra-metrics
-      - api-metrics
+    - infra-metrics
 
   tempo:
     <<: *logging
@@ -169,18 +149,13 @@ services:
     image: "docker.io/grafana/tempo:2.4.0"
 
     command:
-      - "--target=all"
-      - "--storage.trace.backend=local"
-      - "--storage.trace.local.path=/var/tempo"
-      - "--auth.enabled=false"
-
-    ports:
-      - "4317:4317"
-      - "4318:4318"
+    - "--target=all"
+    - "--storage.trace.backend=local"
+    - "--storage.trace.local.path=/var/tempo"
+    - "--auth.enabled=false"
 
     networks:
-      - infra-metrics
-      - api-metrics
+    - infra-metrics
 
 networks:
   database-access:
@@ -188,9 +163,6 @@ networks:
     external: true
   infra-metrics:
     name: infra-metrics
-    external: true
-  api-metrics:
-    name: api-metrics
     external: true
 
 volumes:

@@ -5,9 +5,6 @@
 networks=(
     "database-access"
     "infra-metrics"
-    "api-metrics"
-    "xythrion"
-    "ordis"
 )
 
 echo "Creating docker networks..."
