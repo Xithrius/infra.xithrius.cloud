@@ -86,9 +86,12 @@ services:
     image: "docker.io/prom/prometheus:v2.50.1"
 
     command:
-    - --config.file=/etc/prometheus.yml
+    - "--config.file=/etc/prometheus.yml"
 
     user: "0"
+
+    ports:
+    - "127.0.0.1:9090:9090"
 
     volumes:
     - ./services/prometheus/prometheus.yml:/etc/prometheus.yml
@@ -140,6 +143,9 @@ services:
 
     command: "-config.file=/etc/loki/local-config.yaml"
 
+    ports:
+    - "127.0.0.1:3100:3100"
+
     networks:
     - infra-metrics
 
@@ -153,6 +159,10 @@ services:
     - "--storage.trace.backend=local"
     - "--storage.trace.local.path=/var/tempo"
     - "--auth.enabled=false"
+
+    ports:
+    - "127.0.0.1:4317:4317"
+    - "127.0.0.1:4318:4318"
 
     networks:
     - infra-metrics
