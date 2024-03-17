@@ -48,6 +48,9 @@ services:
 
     image: "docker.io/postgres:16-alpine"
 
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+
     env_file:
     - .env
 
@@ -176,6 +179,8 @@ networks:
     external: true
 
 volumes:
+  postgres_data:
+    external: true
   caddy_data:
     external: true
   caddy_config:

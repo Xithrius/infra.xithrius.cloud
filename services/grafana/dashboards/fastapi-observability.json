@@ -982,7 +982,7 @@
             "uid": "loki"
           },
           "editorMode": "builder",
-          "expr": "{compose_service=~\"api\"} | pattern `<date> <time> <type> <logger> <code> [<_>=<trace_id> <_>=<span_id> <_>=<service_name>] - <msg>` | trace_id != `` | line_format `{{.compose_service}} {{.type}} trace_id={{.trace_id}} {{.msg}}` |= `$log_keyword`",
+          "expr": "{compose_service=~\"api\"} | pattern `<date> <time> <type> <logger> <code> [<_>=<trace_id> <_>=<span_id> <_>=<service_name>] - <msg>` | trace_id != `` | trace_id != `0` | line_format `{{.compose_service}} {{.type}} trace_id={{.trace_id}} {{.msg}}` |= `$log_keyword`",
           "hide": false,
           "queryType": "range",
           "refId": "A"
@@ -999,7 +999,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "xythrion-api",
           "value": "xythrion-api"
         },
@@ -1056,6 +1056,6 @@
   "timezone": "",
   "title": "FastAPI Observability",
   "uid": "fastapi-observability",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
