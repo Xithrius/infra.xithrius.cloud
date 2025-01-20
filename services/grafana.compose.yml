@@ -21,8 +21,8 @@ services:
 
     volumes:
     - ./data/grafana:/var/lib/grafana
-    - ./services/grafana/provisioning:/etc/grafana/provisioning
-    - ./services/grafana/dashboards:/var/lib/grafana/dashboards
+    - ./config/grafana/provisioning:/etc/grafana/provisioning
+    - ./config/grafana/dashboards:/var/lib/grafana/dashboards
 
     networks:
     - infra-metrics

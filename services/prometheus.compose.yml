@@ -23,7 +23,7 @@ services:
     - "127.0.0.1:9090:9090"
 
     volumes:
-    - ./services/prometheus/prometheus.yml:/etc/prometheus.yml
+    - ./config/prometheus/prometheus.yml:/etc/prometheus.yml
     - ./data/prometheus:/prometheus
 
     networks:
