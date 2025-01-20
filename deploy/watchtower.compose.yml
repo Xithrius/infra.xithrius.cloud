@@ -1,0 +1,24 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+x-restart-policy:
+  restart: unless-stopped
+
+services:
+  watchtower:
+    <<: *logging
+
+    image: "docker.io/containrrr/watchtower"
+
+    env_file: .env
+
+    environment:
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_POLL_INTERVAL: 30
+
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock

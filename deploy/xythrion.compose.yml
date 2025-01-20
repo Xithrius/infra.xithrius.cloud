@@ -41,11 +41,3 @@ services:
 
     networks:
     - infra-metrics
-
-networks:
-  database-access:
-    name: database-access
-    external: true
-  infra-metrics:
-    name: infra-metrics
-    external: true

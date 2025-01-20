@@ -1,0 +1,32 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+x-restart-policy:
+  restart: unless-stopped
+
+services:
+  postgres:
+    <<: *logging
+
+    image: "docker.io/postgres:16-alpine"
+
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+
+    env_file: .env
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 2s
+      timeout: 1s
+      retries: 5
+
+    ports:
+    - "127.0.0.1:5432:5432"
+
+    networks:
+    - database-access

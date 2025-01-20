@@ -1,0 +1,28 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+x-restart-policy:
+  restart: unless-stopped
+
+services:
+  grafana:
+    <<: *logging
+
+    image: "docker.io/grafana/grafana:11.4.0"
+
+    environment:
+      GF_SERVER_ROOT_URL: "https://grafana.xithrius.cloud"
+
+    user: "0"
+
+    volumes:
+    - ./data/grafana:/var/lib/grafana
+    - ./services/grafana/provisioning:/etc/grafana/provisioning
+    - ./services/grafana/dashboards:/var/lib/grafana/dashboards
+
+    networks:
+    - infra-metrics

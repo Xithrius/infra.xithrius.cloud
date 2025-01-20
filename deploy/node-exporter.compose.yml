@@ -1,0 +1,31 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+x-restart-policy:
+  restart: unless-stopped
+
+services:
+  node_exporter:
+    <<: *logging
+
+    image: "quay.io/prometheus/node-exporter:v1.8.2"
+
+    command:
+    - "--path.procfs=/host/proc"
+    - "--path.rootfs=/host"
+    - "--path.sysfs=/host/sys"
+    - "--collector.systemd"
+    - "--collector.processes"
+    - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+
+    pid: host
+
+    volumes:
+    - /:/host:ro,rslave
+
+    networks:
+    - infra-metrics

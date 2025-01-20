@@ -1,0 +1,28 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+x-restart-policy:
+  restart: unless-stopped
+
+services:
+  tempo:
+    <<: *logging
+
+    image: "docker.io/grafana/tempo:2.4.0"
+
+    command:
+    - "--target=all"
+    - "--storage.trace.backend=local"
+    - "--storage.trace.local.path=/var/tempo"
+    - "--auth.enabled=false"
+
+    ports:
+    - "127.0.0.1:4317:4317"
+    - "127.0.0.1:4318:4318"
+
+    networks:
+    - infra-metrics
