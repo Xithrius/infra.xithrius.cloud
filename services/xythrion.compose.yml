@@ -29,6 +29,9 @@ services:
     - database-access
     - infra-metrics
 
+    labels:
+    - "com.centurylinklabs.watchtower.enable=true"
+
   xythrion-bot:
     <<: *logging
 
@@ -48,3 +51,6 @@ services:
 
     networks:
     - infra-metrics
+
+    labels:
+    - "com.centurylinklabs.watchtower.enable=true"
