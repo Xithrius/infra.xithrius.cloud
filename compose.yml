@@ -2,11 +2,9 @@ include:
 - services/caddy.compose.yml
 - services/cadvisor.compose.yml
 - services/grafana.compose.yml
-- services/loki.compose.yml
 - services/node-exporter.compose.yml
 - services/postgres.compose.yml
 - services/prometheus.compose.yml
-- services/tempo.compose.yml
 - services/watchtower.compose.yml
 - services/xythrion.compose.yml
 
