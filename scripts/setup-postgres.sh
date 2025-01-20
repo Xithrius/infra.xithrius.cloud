@@ -78,7 +78,7 @@ DATABASE_NAME=$2
 USERNAME=$3
 PASSWORD=$4
 
-DOCKER_NETWORK="database-access"
+DOCKER_NETWORK="infra-metrics"
 POSTGRES_CONTAINER="infraxithriuscloud-postgres-1"
 
 check_and_create_docker_network $DOCKER_NETWORK

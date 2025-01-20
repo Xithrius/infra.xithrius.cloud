@@ -12,8 +12,6 @@ Then place credentials into any key starting with `POSTGRES_`. These will be cre
 
 If the database and/or user already exist, then they will not be modified.
 
-Besides that, the script also creates the `database-access` network, and brings the database up with `docker compose up -d`.
-
 Using the credentials you put into the `.env` file,
 
 > [!IMPORTANT]

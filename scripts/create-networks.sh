@@ -3,7 +3,6 @@
 . common.sh
 
 networks=(
-    "database-access"
     "infra-metrics"
 )
 
