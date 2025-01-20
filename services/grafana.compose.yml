@@ -24,5 +24,8 @@ services:
     - ./config/grafana/provisioning:/etc/grafana/provisioning
     - ./config/grafana/dashboards:/var/lib/grafana/dashboards
 
+    ports:
+    - "127.0.0.1:3000:3000"
+
     networks:
     - infra-metrics
