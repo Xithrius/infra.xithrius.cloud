@@ -1,14 +1,14 @@
 include:
-- deploy/caddy.compose.yml
-- deploy/cadvisor.compose.yml
-- deploy/grafana.compose.yml
-- deploy/loki.compose.yml
-- deploy/node-exporter.compose.yml
-- deploy/postgres.compose.yml
-- deploy/prometheus.compose.yml
-- deploy/tempo.compose.yml
-- deploy/watchtower.compose.yml
-- deploy/xythrion.compose.yml
+- services/caddy.compose.yml
+- services/cadvisor.compose.yml
+- services/grafana.compose.yml
+- services/loki.compose.yml
+- services/node-exporter.compose.yml
+- services/postgres.compose.yml
+- services/prometheus.compose.yml
+- services/tempo.compose.yml
+- services/watchtower.compose.yml
+- services/xythrion.compose.yml
 
 networks:
   database-access:
