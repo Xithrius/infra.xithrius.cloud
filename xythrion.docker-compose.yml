@@ -1,0 +1,51 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+x-restart-policy:
+  restart: unless-stopped
+
+services:
+  xythrion-api:
+    <<: *logging
+
+    image: "ghcr.io/xithrius/xythrion-api:latest"
+
+    env_file:
+    - .env
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/health"]
+
+    networks:
+    - database-access
+    - infra-metrics
+
+  xythrion-bot:
+    <<: *logging
+
+    image: "ghcr.io/xithrius/xythrion-bot:latest"
+
+    env_file:
+    - .env
+
+    environment:
+      XYTHRION_BOT_ENVIRONMENT: "production"
+      XYTHRION_BOT_INTERNAL_API_URL: "http://xythrion-api:8001"
+
+    depends_on:
+    - xythrion-api
+
+    networks:
+    - infra-metrics
+
+networks:
+  database-access:
+    name: database-access
+    external: true
+  infra-metrics:
+    name: infra-metrics
+    external: true
