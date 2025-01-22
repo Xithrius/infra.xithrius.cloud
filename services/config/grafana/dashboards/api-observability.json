@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 8,
+  "id": 9,
   "links": [],
   "panels": [
     {
@@ -128,7 +128,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -359,12 +359,16 @@
             "type": "prometheus",
             "uid": "P1809F7CD0C75ACF3"
           },
-          "editorMode": "code",
-          "expr": "api_http_requests_total{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}",
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "rate(api_http_requests_total{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])",
+          "fullMetaSearch": false,
+          "includeNullMetadata": false,
           "instant": false,
           "legendFormat": "{{endpoint}}",
           "range": true,
-          "refId": "A"
+          "refId": "A",
+          "useBackend": false
         }
       ],
       "title": "Total endpoint requests",
