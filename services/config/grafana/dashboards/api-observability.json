@@ -52,7 +52,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 4,
+        "w": 8,
         "x": 0,
         "y": 0
       },
@@ -98,45 +98,12 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "prometheus"
+        "uid": "P1809F7CD0C75ACF3"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
@@ -148,7 +115,7 @@
               },
               {
                 "color": "red",
-                "value": 80
+                "value": 10000
               }
             ]
           },
@@ -158,46 +125,42 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 8,
-        "x": 4,
+        "w": 4,
+        "x": 8,
         "y": 0
       },
-      "id": 12,
+      "id": 31,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+        "minVizHeight": 75,
+        "minVizWidth": 75,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "sizing": "auto"
       },
       "pluginVersion": "11.4.0",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "prometheus"
+            "uid": "P1809F7CD0C75ACF3"
           },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "exemplar": true,
-          "expr": "rate(api_http_requests_total{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[1m])",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "interval": "",
-          "legendFormat": "{{endpoint}}",
+          "editorMode": "code",
+          "expr": "rate(api_http_requests_total{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])",
+          "instant": false,
+          "legendFormat": "__auto",
           "range": true,
-          "refId": "A",
-          "useBackend": false
+          "refId": "A"
         }
       ],
-      "title": "Requests Per Sec",
+      "title": "Requests per second",
       "transparent": true,
-      "type": "timeseries"
+      "type": "gauge"
     },
     {
       "datasource": {
@@ -237,7 +200,7 @@
       "options": {
         "displayMode": "lcd",
         "legend": {
-          "calcs": [],
+          "calcs": ["lastNotNull"],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": false
@@ -245,7 +208,7 @@
         "maxVizHeight": 300,
         "minVizHeight": 10,
         "minVizWidth": 0,
-        "namePlacement": "auto",
+        "namePlacement": "top",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": ["lastNotNull"],
@@ -264,6 +227,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
+          "exemplar": false,
           "expr": "(api_http_requests_duration_seconds_sum{app_name=\"$app_name\"} / api_http_requests_duration_seconds_count{app_name=\"$app_name\"}) * 1000",
           "hide": false,
           "instant": false,
@@ -335,7 +299,7 @@
       },
       "gridPos": {
         "h": 8,
-        "w": 12,
+        "w": 6,
         "x": 0,
         "y": 8
       },
@@ -360,7 +324,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "rate(api_http_requests_total{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])",
           "fullMetaSearch": false,
           "includeNullMetadata": false,
@@ -372,6 +336,110 @@
         }
       ],
       "title": "Total endpoint requests",
+      "transparent": true,
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 8
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": true,
+          "expr": "sum(irate(api_http_requests_duration_seconds_count{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])) * 60",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "interval": "",
+          "legendFormat": "{{endpoint}}",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Requests Per Minute",
       "transparent": true,
       "type": "timeseries"
     },
@@ -459,9 +527,9 @@
             "uid": "prometheus"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.50, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[1m])))",
+          "expr": "histogram_quantile(0.50, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "interval": "",
@@ -561,7 +629,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.75, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[1m])))",
+          "expr": "histogram_quantile(0.75, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "interval": "",
@@ -661,7 +729,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.90, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[1m])))",
+          "expr": "histogram_quantile(0.90, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "interval": "",
@@ -761,7 +829,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[1m])))",
+          "expr": "histogram_quantile(0.95, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "interval": "",
@@ -861,7 +929,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.99, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[1m])))",
+          "expr": "histogram_quantile(0.99, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "interval": "",
@@ -961,7 +1029,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": true,
-          "expr": "histogram_quantile(0.999, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[1m])))",
+          "expr": "histogram_quantile(0.999, sum by(endpoint, path, le) (rate(api_http_requests_duration_seconds_bucket{app_name=\"$app_name\", endpoint!~\"/metrics|/api/health\"}[$__rate_interval])))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "interval": "",
@@ -977,7 +1045,7 @@
     }
   ],
   "preload": false,
-  "refresh": "5s",
+  "refresh": "30s",
   "schemaVersion": 40,
   "tags": [],
   "templating": {
@@ -1027,6 +1095,6 @@
   "timezone": "",
   "title": "API Observability",
   "uid": "api-observability",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
