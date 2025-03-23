@@ -12,7 +12,7 @@ services:
   grafana:
     <<: *logging
 
-    image: "docker.io/grafana/grafana:11.4.0"
+    image: "docker.io/grafana/grafana:11.5.2"
 
     environment:
       GF_SERVER_ROOT_URL: "https://grafana.xithrius.cloud"
